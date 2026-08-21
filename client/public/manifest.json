@@ -1,0 +1,11 @@
+{
+  "name": "Horta Científica UFNT",
+  "short_name": "Horta UFNT",
+  "description": "Monitoramento científico de hortas e hidroponia em escolas.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f7f1",
+  "theme_color": "#173d32",
+  "lang": "pt-BR",
+  "icons": []
+}

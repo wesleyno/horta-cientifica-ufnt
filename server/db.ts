@@ -1,11 +1,9 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import { auditLogs, calendarEvents, measurements, projects, users, workspaceMembers, workspaces } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -18,75 +16,77 @@ export async function getDb() {
   return _db;
 }
 
-export async function upsertUser(user: InsertUser): Promise<void> {
-  if (!user.openId) {
-    throw new Error("User openId is required for upsert");
-  }
-
+export async function getUserByEmail(email: string) {
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot upsert user: database not available");
-    return;
-  }
-
-  try {
-    const values: InsertUser = {
-      openId: user.openId,
-    };
-    const updateSet: Record<string, unknown> = {};
-
-    const textFields = ["name", "email", "loginMethod"] as const;
-    type TextField = (typeof textFields)[number];
-
-    const assignNullable = (field: TextField) => {
-      const value = user[field];
-      if (value === undefined) return;
-      const normalized = value ?? null;
-      values[field] = normalized;
-      updateSet[field] = normalized;
-    };
-
-    textFields.forEach(assignNullable);
-
-    if (user.lastSignedIn !== undefined) {
-      values.lastSignedIn = user.lastSignedIn;
-      updateSet.lastSignedIn = user.lastSignedIn;
-    }
-    if (user.role !== undefined) {
-      values.role = user.role;
-      updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
-    }
-
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
-  } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
-    throw error;
-  }
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
+  return result[0];
 }
 
-export async function getUserByOpenId(openId: string) {
+export async function getUserById(id: number) {
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
-  }
-
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result[0];
 }
 
-// TODO: add feature queries here as your schema grows.
+export async function listWorkspacesForUser(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({ workspace: workspaces, membership: workspaceMembers })
+    .from(workspaceMembers)
+    .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
+    .where(eq(workspaceMembers.userId, userId));
+}
+
+export async function listProjectsForUser(user: { id: number; role: string }) {
+  const db = await getDb();
+  if (!db) return [];
+  if (user.role === "global_admin") return db.select().from(projects).orderBy(desc(projects.createdAt));
+  const memberships = await db.select({ workspaceId: workspaceMembers.workspaceId }).from(workspaceMembers).where(eq(workspaceMembers.userId, user.id));
+  const workspaceIds = memberships.map(row => row.workspaceId);
+  if (workspaceIds.length === 0) return [];
+  if (user.role === "student") return db.select().from(projects).where(and(eq(projects.studentId, user.id), inArray(projects.workspaceId, workspaceIds))).orderBy(desc(projects.createdAt));
+  return db.select().from(projects).where(inArray(projects.workspaceId, workspaceIds)).orderBy(desc(projects.createdAt));
+}
+
+export async function getProjectForUser(projectId: number, user: { id: number; role: string }) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await listProjectsForUser(user);
+  return rows.find(project => project.id === projectId);
+}
+
+export async function recordAudit(input: {
+  workspaceId?: number | null;
+  actorId: number;
+  action: string;
+  entityType: string;
+  entityId?: number | null;
+  previousValues?: unknown;
+  newValues?: unknown;
+}) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(auditLogs).values({
+    workspaceId: input.workspaceId ?? null,
+    actorId: input.actorId,
+    action: input.action,
+    entityType: input.entityType,
+    entityId: input.entityId ?? null,
+    previousValues: input.previousValues as any,
+    newValues: input.newValues as any,
+  });
+}
+
+export async function listMeasurements(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(measurements).where(eq(measurements.projectId, projectId)).orderBy(desc(measurements.recordedAt));
+}
+
+export async function listCalendarEvents(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(calendarEvents).where(eq(calendarEvents.projectId, projectId)).orderBy(calendarEvents.eventDate);
+}

@@ -1,0 +1,44 @@
+# Project TODO
+
+- [x] Replace the template OAuth flow with first-party email-and-password authentication.
+- [ ] Add secure password hashing, session management, logout, password recovery, and account validation flows.
+- [x] Extend the user profile with name, email, CPF, date of birth, role, and workspace membership.
+- [x] Implement the three roles: global admin, professor, and student.
+- [x] Implement multitenant workspaces with strict data isolation between schools or organizations.
+- [ ] Add global-admin workspace creation and global visibility across workspaces.
+- [ ] Add professor invitations and management of professors and students within the professor's workspace.
+- [x] Add student management with individual access restricted to the student's own workspace and projects.
+- [x] Add student-owned plant projects with name, description, project type, and start date.
+- [x] Add project measurements for water level, water temperature, pH, EC/TDS nutrients, plant height, leaf count, and development observations.
+- [ ] Add per-project search, filtering, sorting, and date-range navigation for measurement history.
+- [ ] Add per-project garden calendar events for planting, nutrient replenishment, cleaning, and harvesting.
+- [ ] Add S3-backed photographic diary with upload, date, caption, project association, and secure access controls.
+- [ ] Add student reports restricted to the student's projects.
+- [ ] Add professor reports covering all students in the professor's workspace.
+- [ ] Add global-admin reports covering all workspaces and projects.
+- [ ] Add line charts, bar charts, and filterable tables by date range and measurement type.
+- [ ] Add immutable audit trail for all insertions and changes, including actor, timestamp, entity, previous values, and new values.
+- [ ] Add configurable out-of-range thresholds for scientific measurements.
+- [ ] Add in-app alerts for out-of-range values and relevant project events.
+- [ ] Add email notifications for new records, threshold alerts, and calendar reminders.
+- [ ] Add web push notifications with permission flow, subscription storage, and event delivery.
+- [ ] Add responsive PWA experience suitable for mobile devices used in school activities.
+- [x] Establish the visual identity and accessible dashboard layout for students, professors, and administrators.
+- [ ] Add Vitest coverage for authentication, tenant isolation, role permissions, audit behavior, and core data procedures.
+- [ ] Run type checks, tests, build verification, and responsive visual verification.
+- [ ] Prepare GitHub repository synchronization and Vercel deployment configuration without exposing secrets.
+- [ ] Document required environment variables, free-tier limitations, backup considerations, and future Android/iOS packaging path.
+- [ ] Confirm data-protection requirements for CPF and date of birth, especially if students are minors, before production use.
+- [ ] Implement password recovery and account verification flows end-to-end.
+- [ ] Add a global-admin endpoint and UI to list all workspaces independently of membership rows.
+- [ ] Implement professor invitation acceptance with token expiry and optional email delivery.
+- [ ] Add measurement-history search, period filters, type filters, and date-range navigation.
+- [ ] Complete PWA installability with required icons and mobile QA.
+- [ ] Add Vitest coverage for login/register, tenant isolation, role permissions, audit writes, and core CRUD procedures.
+- [ ] Confirm the initial global-admin account and invitation/onboarding policy before production use.
+
+## History
+
+- Initial version 1 scope recorded from the user's requirements on 2026-08-21.
+- The existing scaffold's Manus OAuth is explicitly out of scope and must be replaced by first-party authentication.
+- The database must remain compatible with the requested GitHub/Vercel deployment workflow and S3 photo storage.
