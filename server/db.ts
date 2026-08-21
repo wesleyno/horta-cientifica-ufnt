@@ -30,13 +30,11 @@ export async function getUserById(id: number) {
   return result[0];
 }
 
-export async function listWorkspacesForUser(userId: number) {
+export async function listWorkspacesForUser(userId: number, isGlobalAdmin = false) {
   const db = await getDb();
   if (!db) return [];
-  return db.select({ workspace: workspaces, membership: workspaceMembers })
-    .from(workspaceMembers)
-    .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
-    .where(eq(workspaceMembers.userId, userId));
+  if (isGlobalAdmin) return db.select({ workspace: workspaces, membership: workspaceMembers }).from(workspaces).leftJoin(workspaceMembers, eq(workspaceMembers.workspaceId, workspaces.id));
+  return db.select({ workspace: workspaces, membership: workspaceMembers }).from(workspaceMembers).innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id)).where(eq(workspaceMembers.userId, userId));
 }
 
 export async function listProjectsForUser(user: { id: number; role: string }) {

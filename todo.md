@@ -11,7 +11,7 @@
 - [x] Add student-owned plant projects with name, description, project type, and start date.
 - [x] Add project measurements for water level, water temperature, pH, EC/TDS nutrients, plant height, leaf count, and development observations.
 - [ ] Add per-project search, filtering, sorting, and date-range navigation for measurement history.
-- [ ] Add per-project garden calendar events for planting, nutrient replenishment, cleaning, and harvesting.
+- [x] Add per-project garden calendar events for planting, nutrient replenishment, cleaning, and harvesting.
 - [ ] Add S3-backed photographic diary with upload, date, caption, project association, and secure access controls.
 - [ ] Add student reports restricted to the student's projects.
 - [ ] Add professor reports covering all students in the professor's workspace.
@@ -25,7 +25,7 @@
 - [ ] Add responsive PWA experience suitable for mobile devices used in school activities.
 - [x] Establish the visual identity and accessible dashboard layout for students, professors, and administrators.
 - [ ] Add Vitest coverage for authentication, tenant isolation, role permissions, audit behavior, and core data procedures.
-- [ ] Run type checks, tests, build verification, and responsive visual verification.
+- [x] Run type checks, tests, build verification, and responsive visual verification.
 - [ ] Prepare GitHub repository synchronization and Vercel deployment configuration without exposing secrets.
 - [ ] Document required environment variables, free-tier limitations, backup considerations, and future Android/iOS packaging path.
 - [ ] Confirm data-protection requirements for CPF and date of birth, especially if students are minors, before production use.
@@ -36,9 +36,16 @@
 - [ ] Complete PWA installability with required icons and mobile QA.
 - [ ] Add Vitest coverage for login/register, tenant isolation, role permissions, audit writes, and core CRUD procedures.
 - [ ] Confirm the initial global-admin account and invitation/onboarding policy before production use.
+- [ ] Protect photo retrieval with authorization-aware access and allow explicit photo dates.
+- [ ] Enforce audit-log immutability and record previous and new values for update flows.
+- [ ] Add tests for photo access authorization and audit-log creation for inserts and updates.
 
 ## History
 
 - Initial version 1 scope recorded from the user's requirements on 2026-08-21.
 - The existing scaffold's Manus OAuth is explicitly out of scope and must be replaced by first-party authentication.
 - The database must remain compatible with the requested GitHub/Vercel deployment workflow and S3 photo storage.
+- [x] Generate Web Push VAPID keys automatically inside the project without requiring manual user configuration.
+- [ ] Keep in-app alerts usable without external credentials and document the exact boundary for external e-mail delivery.
+- [ ] Prepare e-mail provider integration so only a one-time provider authentication is needed if the free provider requires it.
+- [x] Avoid asking the user to manually create or copy technical credentials unless the external provider requires an unavoidable authentication step.
