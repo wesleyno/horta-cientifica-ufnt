@@ -22,20 +22,22 @@
 - [ ] Add in-app alerts for out-of-range values and relevant project events.
 - [ ] Add email notifications for new records, threshold alerts, and calendar reminders.
 - [ ] Add web push notifications with permission flow, subscription storage, and event delivery.
-- [ ] Add responsive PWA experience suitable for mobile devices used in school activities.
+- [x] Add responsive PWA experience suitable for mobile devices used in school activities.
 - [x] Establish the visual identity and accessible dashboard layout for students, professors, and administrators.
 - [ ] Add Vitest coverage for authentication, tenant isolation, role permissions, audit behavior, and core data procedures.
 - [x] Run type checks, tests, build verification, and responsive visual verification.
 - [ ] Prepare GitHub repository synchronization and Vercel deployment configuration without exposing secrets.
-- [ ] Document required environment variables, free-tier limitations, backup considerations, and future Android/iOS packaging path.
+- [x] Document required environment variables, free-tier limitations, backup considerations, and future Android/iOS packaging path.
 - [ ] Confirm data-protection requirements for CPF and date of birth, especially if students are minors, before production use.
 - [ ] Implement password recovery and account verification flows end-to-end.
 - [ ] Add a global-admin endpoint and UI to list all workspaces independently of membership rows.
 - [ ] Implement professor invitation acceptance with token expiry and optional email delivery.
 - [ ] Add measurement-history search, period filters, type filters, and date-range navigation.
-- [ ] Complete PWA installability with required icons and mobile QA.
+- [x] Complete PWA installability with required icons and mobile QA.
 - [ ] Add Vitest coverage for login/register, tenant isolation, role permissions, audit writes, and core CRUD procedures.
 - [ ] Confirm the initial global-admin account and invitation/onboarding policy before production use.
+- [ ] Implement actual GitHub synchronization and concrete Vercel deployment configuration, or document the access limitation explicitly.
+- [x] Expand deployment documentation with an explicit environment-variable list, free-tier constraints, backup/restore considerations, and mobile packaging steps.
 - [ ] Protect photo retrieval with authorization-aware access and allow explicit photo dates.
 - [ ] Enforce audit-log immutability and record previous and new values for update flows.
 - [ ] Add tests for photo access authorization and audit-log creation for inserts and updates.
