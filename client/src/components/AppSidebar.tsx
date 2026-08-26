@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-type Section = "overview" | "schools" | "users" | "projects" | "measurements" | "calendar" | "photos" | "reports";
+type Section = "overview" | "schools" | "users" | "projects" | "project" | "measurements" | "calendar" | "photos" | "reports";
 type Workspace = { workspace: { id: number; name: string; slug: string } };
 type AppSidebarProps = { role: string; active: Section; onNavigate: (section: Section) => void; onCollapsedChange?: (collapsed: boolean) => void; workspaces?: Workspace[]; selectedWorkspaceId?: number; onWorkspaceChange?: (id?: number) => void };
 const items: Array<{ id: Section; label: string; icon: typeof Home; roles: string[] }> = [
