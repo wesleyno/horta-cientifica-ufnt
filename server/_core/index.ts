@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express, { type Express } from "express";
+import express, { type Application } from "express";
 import { createServer, type Server } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
@@ -24,7 +24,7 @@ async function findAvailablePort(startPort = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
-export async function createApp(): Promise<{ app: Express; server: Server }> {
+export async function createApp(): Promise<{ app: Application; server: Server }> {
   const app = express();
   const server = createServer(app);
   app.use(express.json({ limit: "50mb" }));
