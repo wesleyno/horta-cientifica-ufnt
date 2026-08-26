@@ -2,19 +2,20 @@
 
 ## Estado atual
 
-A aplicação usa React, Vite, Express, tRPC, Drizzle e banco relacional compatível com a infraestrutura gerenciada do projeto. As fotos são gravadas no armazenamento S3 por meio de `storagePut`, e o navegador tem manifest, service worker e fluxo de inscrição Web Push.
+A aplicação usa React, Vite, Express, tRPC e Drizzle. O banco foi preparado para PostgreSQL no Neon usando `@neondatabase/serverless` e `drizzle-orm/neon-http`. A Vercel publica o frontend compilado em `dist/public` e o backend por meio da função catch-all em `api/[...path].ts`. As fotos ainda dependem de armazenamento S3 por meio de `storagePut` e precisam de um provedor externo compatível quando o projeto sair do ambiente interno; o navegador tem manifest, service worker e fluxo de inscrição Web Push.
 
 ## GitHub e Vercel
 
 O código está versionado no checkpoint do projeto e pode ser sincronizado com GitHub pela área de gerenciamento. A configuração efetiva de uma conta GitHub ou de um projeto Vercel exige acesso à conta do proprietário, que não é fornecido automaticamente ao ambiente de desenvolvimento. Por esse motivo, a automação prepara o código e a configuração, mas não cria repositórios, não autoriza OAuth de terceiros e não publica sem a autenticação pontual do proprietário.
 
-Depois de conectar o repositório, o fluxo recomendado é selecionar a pasta raiz do projeto, manter o comando `pnpm build`, usar `pnpm start` no servidor Node e cadastrar as variáveis abaixo no ambiente de produção. Na infraestrutura gerenciada do projeto, o caminho mais simples é usar o botão **Publish** depois de revisar o checkpoint.
+Depois de conectar o repositório, o fluxo recomendado é selecionar a pasta raiz do projeto, manter `pnpm install --frozen-lockfile` como instalação e `pnpm build` como build. A configuração `vercel.json` usa `dist/public` como saída do frontend e a pasta `api` para o backend. Cadastre as variáveis abaixo no ambiente de produção. Na infraestrutura gerenciada do projeto, o caminho mais simples é usar o botão **Publish** depois de revisar o checkpoint.
 
 ## Variáveis de ambiente
 
 | Variável | Uso | Obrigatória |
 |---|---|---:|
-| `DATABASE_URL` | Conexão com o banco relacional | Sim |
+| `DATABASE_URL` | Conexão pooled do Neon para runtime | Sim |
+| `DATABASE_URL_UNPOOLED` | Conexão direta do Neon para migrations | Sim para migrations |
 | `JWT_SECRET` | Assinatura das sessões locais | Sim |
 | `BUILT_IN_FORGE_API_URL` | APIs internas para armazenamento e serviços da plataforma | Sim |
 | `BUILT_IN_FORGE_API_KEY` | Autorização server-side dessas APIs | Sim |

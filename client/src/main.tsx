@@ -11,7 +11,7 @@ const trpcClient = trpc.createClient({
   links: [httpBatchLink({ url: "/api/trpc", transformer: superjson, fetch(input, init) { return globalThis.fetch(input, { ...(init ?? {}), credentials: "include" }); } })],
 });
 
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js?v=2", { updateViaCache: "none" }).catch(() => undefined);
 
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
