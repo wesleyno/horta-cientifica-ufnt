@@ -9,6 +9,7 @@ type AppSidebarProps = {
   role: string;
   active: Section;
   onNavigate: (section: Section) => void;
+  onCollapsedChange?: (collapsed: boolean) => void;
 };
 
 const items: Array<{ id: Section; label: string; icon: typeof Home; roles: string[] }> = [
@@ -22,7 +23,7 @@ const items: Array<{ id: Section; label: string; icon: typeof Home; roles: strin
   { id: "reports", label: "Relatórios", icon: BarChart3, roles: ["global_admin", "professor"] },
 ];
 
-export function AppSidebar({ role, active, onNavigate }: AppSidebarProps) {
+export function AppSidebar({ role, active, onNavigate, onCollapsedChange }: AppSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const visibleItems = items.filter(item => item.roles.includes(role));
@@ -31,7 +32,7 @@ export function AppSidebar({ role, active, onNavigate }: AppSidebarProps) {
     <div className={cn("flex h-20 items-center border-b border-white/10 px-4", collapsed ? "justify-center" : "justify-between")}>
       {!collapsed && <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#d5ed8c] text-[#173d32]"><Leaf className="h-5 w-5" /></div><div><p className="font-semibold">Horta científica</p><p className="text-xs text-[#b9d1bd]">Painel UFNT</p></div></div>}
       {collapsed && <Leaf className="h-5 w-5 text-[#d5ed8c]" />}
-      <button className="hidden rounded-lg p-2 text-[#b9d1bd] hover:bg-white/10 lg:block" onClick={() => setCollapsed(!collapsed)} aria-label={collapsed ? "Expandir menu" : "Recolher menu"}>{collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}</button>
+      <button className="hidden rounded-lg p-2 text-[#b9d1bd] hover:bg-white/10 lg:block" onClick={() => { const next = !collapsed; setCollapsed(next); onCollapsedChange?.(next); }} aria-label={collapsed ? "Expandir menu" : "Recolher menu"}>{collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}</button>
     </div>
     <nav className="flex-1 space-y-1 overflow-y-auto p-3">{visibleItems.map(item => { const Icon = item.icon; return <button key={item.id} onClick={() => navigate(item.id)} className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm transition", active === item.id ? "bg-[#d5ed8c] font-medium text-[#173d32]" : "text-[#d8e6d9] hover:bg-white/10", collapsed && "justify-center px-2")} title={collapsed ? item.label : undefined}><Icon className="h-5 w-5 shrink-0" />{!collapsed && <span>{item.label}</span>}</button>; })}</nav>
     {!collapsed && <div className="border-t border-white/10 p-4"><div className="rounded-2xl bg-white/10 p-3 text-xs leading-5 text-[#d8e6d9]"><ShieldCheck className="mb-2 h-4 w-4 text-[#d5ed8c]" /><p>{role === "global_admin" ? "Acesso master a todas as escolas." : role === "professor" ? "Gestão da sua escola." : "Registros do seu projeto."}</p></div></div>}
