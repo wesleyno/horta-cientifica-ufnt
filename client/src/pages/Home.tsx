@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { AppSidebar, type Section } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input as BaseInput } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +13,8 @@ import { Activity, ArrowUpRight, CalendarDays, Droplets, Leaf, LogOut, Plus, Shi
 import { toast } from "sonner";
 
 const roleLabels: Record<string, string> = { global_admin: "Administrador global", professor: "Professor", student: "Aluno" };
+
+function Input({ className, ...props }: ComponentProps<typeof BaseInput>) { return <BaseInput {...props} className={["h-11 rounded-xl border-[#dce8dc] bg-white/90 shadow-sm transition-all placeholder:text-[#9aaca0] hover:border-[#b9d4b3] focus:border-[#6e9e66] focus:bg-white focus:ring-4 focus:ring-[#d5ed8c]/30", className].filter(Boolean).join(" ")} />; }
 
 function AuthScreen() {
   const [mode, setMode] = useState<"login" | "register">("login");
