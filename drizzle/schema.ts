@@ -61,7 +61,7 @@ export const workspaceMembers = pgTable("workspaceMembers", {
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   workspaceId: integer("workspaceId").notNull(),
-  studentId: integer("studentId").notNull(),
+  studentId: integer("studentId"),
   name: varchar("name", { length: 180 }).notNull(),
   description: text("description"),
   projectType: projectTypeEnum("projectType").default("hydroponics").notNull(),
