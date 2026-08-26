@@ -34,7 +34,7 @@ export async function getUserById(id: number) {
 export async function listWorkspacesForUser(userId: number, isGlobalAdmin = false) {
   const db = await getDb();
   if (!db) return [];
-  if (isGlobalAdmin) return db.select({ workspace: workspaces, membership: workspaceMembers }).from(workspaces).leftJoin(workspaceMembers, eq(workspaceMembers.workspaceId, workspaces.id));
+  if (isGlobalAdmin) return db.select({ workspace: workspaces, membership: workspaceMembers }).from(workspaces).leftJoin(workspaceMembers, and(eq(workspaceMembers.workspaceId, workspaces.id), eq(workspaceMembers.membershipRole, "owner")));
   return db.select({ workspace: workspaces, membership: workspaceMembers }).from(workspaceMembers).innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id)).where(eq(workspaceMembers.userId, userId));
 }
 
